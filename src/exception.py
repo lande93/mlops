@@ -1,6 +1,7 @@
 import sys
 import traceback
 import logging
+from src import logger
 
 def error_message_detail(error, error_detail: sys):
     """
@@ -35,15 +36,15 @@ class CustomException(Exception):
 
     def __str__(self):
         return self.error_message
-# if __name__=="__main__":
+if __name__=="__main__":
 
-#     try:
+     try:
         
-#         1/0
-#     except Exception as e:
-#      logging.info('is ther an exception')    
-#      error_details = error_message_detail(e, sys)
-#      print(error_details)
+         1/0
+     except Exception as e:
+      logging.info('is ther an exception')    
+      error_details = error_message_detail(e, sys)
+      print(error_details)
 
 
    
