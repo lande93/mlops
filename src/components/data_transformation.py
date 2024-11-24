@@ -11,15 +11,16 @@ from src.logger import logging
 from dataclasses import dataclass
 import numpy as np
 import joblib
+from src.utils import save_object
 
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path: str = os.path.join("artifacts", "preprocessor.pkl")
+    preprocessor_obj_file_path: str = os.path.join("artifacts", "prepro.pkl")
 
 class DataTransformation:
     def __init__(self):
-        self.transformation_config = DataTransformationConfig()
+        self.data_transformation_config = DataTransformationConfig()
 
     def get_data_transformer_object(self):
         """
@@ -27,23 +28,16 @@ class DataTransformation:
         """
         try:
             # Define which columns are numeric and which are categorical
-            numeric_features = ['account length',
- 'area code',
- 'number vmail messages',
- 'total day minutes',
- 'total day calls',
- 'total day charge',
- 'total eve minutes',
- 'total eve calls',
- 'total eve charge',
- 'total night minutes',
- 'total night calls',
- 'total night charge',
- 'total intl minutes',
- 'total intl calls',
- 'total intl charge',
- 'customer service calls'] # Replace with actual numeric columns
-            categorical_features = ['state', 'phone number', 'international plan', 'voice mail plan'] # Replace with actual categorical columns
+            numeric_features = [
+        'feat_0', 'feat_1', 'feat_2', 'feat_3', 'feat_4', 'feat_5',
+       'feat_6', 'feat_7', 'feat_8', 'feat_9', 'feat_10', 'feat_11', 'feat_12',
+       'feat_13', 'feat_14', 'feat_15', 'feat_16', 'feat_17', 'feat_18',
+       'feat_19'] # Replace with actual numeric columns
+            #categorical_features = ['state', 'international plan', 'voice mail plan']
+            
+            
+             # Replace with actual categorical columns
+            
 
             # Create pipelines for both numerical and categorical data transformations
 
@@ -53,17 +47,24 @@ class DataTransformation:
                 ('scaler', StandardScaler())  # Scale features
             ])
 
-            # Pipeline for categorical features
-            categorical_transformer = Pipeline(steps=[
-                ('imputer', SimpleImputer(strategy='most_frequent')),  # Handle missing values
-                ('onehot', OneHotEncoder(handle_unknown='ignore'))  # Encode categorical variables
-            ])
+            # # Pipeline for categorical features
+            # #categorical_transformer = Pipeline(steps=[
+            # #     ('imputer', SimpleImputer(strategy='most_frequent')),  # Handle missing values
+            # #     ('onehot', OneHotEncoder(handle_unknown='ignore'))  # Encode categorical variables
+            # # ])
+            #                 ("onehot", OneHotEncoder(handle_unknown='ignore')),
+            #     ('scaler', StandardScaler(with_mean=False))
+            #     ])
+
+
+       
 
             # Column transformer that applies the appropriate transformations to each column type
             preprocessor = ColumnTransformer(
                 transformers=[
-                    ('num', numeric_transformer, numeric_features),
-                    ('cat', categorical_transformer, categorical_features)
+                    ('num', numeric_transformer, numeric_features)
+                    #('cat', categorical_transformer, categorical_features),
+                     
                 ]
             )
 
@@ -86,43 +87,71 @@ class DataTransformation:
 
             logging.info("Loaded train and test data")
 
+            preprocessor_obj = self.get_data_transformer_object()
+
             # Assuming the target column is 'target'
-            target_column = "churn"
-            input_feature_train_df = train_df.drop(columns=[target_column])
+            target_column = ['y']
+            not_imp_variables=['index']
+            input_feature_train_df = train_df.drop(columns=target_column + not_imp_variables,axis=1)
             target_feature_train_df = train_df[target_column]
 
-            input_feature_test_df = test_df.drop(columns=[target_column])
+            input_feature_test_df = test_df.drop(columns=target_column + not_imp_variables,axis=1)
             target_feature_test_df = test_df[target_column]
 
             logging.info("Splitting data into input features and target variable")
 
             # Get the preprocessor object
-            preprocessor = self.get_data_transformer_object()
+            # preprocessor_obj = self.get_data_transformer_object()
+            
 
             # Fit and transform the training data
-            input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
-            input_feature_test_arr = preprocessor.transform(input_feature_test_df)
+            input_feature_train_arr = preprocessor_obj.fit_transform(input_feature_train_df)
+            input_feature_test_arr = preprocessor_obj.transform(input_feature_test_df)
+
+            print("Input Feature Train Array Shape:", input_feature_train_arr.shape)
+            print("Target Feature Train Array Shape:", np.array(target_feature_train_df).shape)
+            print("Input Feature Test Array Shape:", input_feature_test_arr.shape)
+            print("Target Feature Test Array Shape:", np.array(target_feature_test_df).shape)
+
+
+            target_feature_train_df = target_feature_train_df.values.reshape(-1, 1)
+            target_feature_test_df = target_feature_test_df.values.reshape(-1, 1)
+
+            
 
             logging.info("Applied data transformations to the train and test datasets")
 
-            # Save the preprocessor object for later use
-            joblib.dump(preprocessor, self.transformation_config.preprocessor_obj_file_path)
-            logging.info(f"Preprocessor saved at {self.transformation_config.preprocessor_obj_file_path}")
+            # train_array = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            # test_array = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            train_array = np.c_[input_feature_train_arr, target_feature_train_df]
+            test_array = np.c_[input_feature_test_arr, target_feature_test_df]
+
+      
+        
+            save_object(
+
+                file_path=self.data_transformation_config.preprocessor_obj_file_path,
+                obj=preprocessor_obj
+
+            )
 
             return (
-                input_feature_train_arr, target_feature_train_df,
-                input_feature_test_arr, target_feature_test_df,
-                self.transformation_config.preprocessor_obj_file_path
+                train_array,
+                test_array,
+                self.data_transformation_config.preprocessor_obj_file_path
             )
+        
+        
 
         except Exception as e:
             logging.error(f"Error in data transformation process: {e}")
             raise CustomException(e, sys)
 
-# Usage example:
-if __name__ == "__main__":
-    data_transformation = DataTransformation()
-    train_path = "artifacts/train.csv"
-    test_path = "artifacts/test.csv"
 
-    data_transformation.initiate_data_transformation(train_path, test_path)
+# # Usage example:
+# if __name__ == "__main__":
+#     data_transformation = DataTransformation()
+#     train_path = "artifacts/train.csv"
+#     test_path = "artifacts/test.csv"
+
+#     data_transformation.initiate_data_transformation(train_path, test_path)

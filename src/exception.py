@@ -31,25 +31,20 @@ class CustomException(Exception):
         error_detail: sys module to extract error details.
         """
         super().__init__(error_message)
-        self.error_message = self.error_message_detail(error_message, error_detail)
-
+        # Use the standalone function to generate the detailed error message
+        self.error_message = error_message_detail(error_message, error_detail)
 
     def __str__(self):
         return self.error_message
-if __name__=="__main__":
 
-     try:
-        
-         1/0
-     except Exception as e:
-      logging.info('is ther an exception')    
-      error_details = error_message_detail(e, sys)
-      print(error_details)
+if __name__ == "__main__":
 
-
-   
-
-
+    try:
+        1/0  # Deliberately cause an exception
+    except Exception as e:
+        logging.info('An exception occurred')
+        error_details = error_message_detail(e, sys)
+        print(error_details)
 # Example usage:
 # try:
 #     # Example that raises an error
