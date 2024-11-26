@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter Feature Values for Prediction</h1>
+    <form action="/predictdata" method="POST">
+        <!-- Feature Inputs -->
+        <label for="feat_0">Feature 0:</label>
+        <input type="text" id="feat_0" name="feat_0" required>
+        
+        <label for="feat_1">Feature 1:</label>
+        <input type="text" id="feat_1" name="feat_1" required>
+        
+        <label for="feat_2">Feature 2:</label>
+        <input type="text" id="feat_2" name="feat_2" required>
+        
+        <label for="feat_3">Feature 3:</label>
+        <input type="text" id="feat_3" name="feat_3" required>
+        
+        <label for="feat_4">Feature 4:</label>
+        <input type="text" id="feat_4" name="feat_4" required>
+        
+        <!-- Numeric Features -->
+        <label for="feat_5">Feature 5 (numeric):</label>
+        <input type="number" id="feat_5" name="feat_5" required>
+        
+        <label for="feat_6">Feature 6 (numeric):</label>
+        <input type="number" id="feat_6" name="feat_6" required>
+        
+        <label for="feat_7">Feature 7 (numeric):</label>
+        <input type="number" id="feat_7" name="feat_7" required>
+        
+        <label for="feat_8">Feature 8 (numeric):</label>
+        <input type="number" id="feat_8" name="feat_8" required>
+        
+        <label for="feat_9">Feature 9 (numeric):</label>
+        <input type="number" id="feat_9" name="feat_9" required>
+        
+        <!-- Continue for the remaining features -->
+        <label for="feat_10">Feature 10 (numeric):</label>
+        <input type="number" id="feat_10" name="feat_10" required>
+        
+        <label for="feat_11">Feature 11 (numeric):</label>
+        <input type="number" id="feat_11" name="feat_11" required>
+        
+        <label for="feat_12">Feature 12 (numeric):</label>
+        <input type="number" id="feat_12" name="feat_12" required>
+        
+        <label for="feat_13">Feature 13 (numeric):</label>
+        <input type="number" id="feat_13" name="feat_13" required>
+        
+        <label for="feat_14">Feature 14 (numeric):</label>
+        <input type="number" id="feat_14" name="feat_14" required>
+        
+        <label for="feat_15">Feature 15 (numeric):</label>
+        <input type="number" id="feat_15" name="feat_15" required>
+        
+        <label for="feat_16">Feature 16 (numeric):</label>
+        <input type="number" id="feat_16" name="feat_16" required>
+        
+        <label for="feat_17">Feature 17 (numeric):</label>
+        <input type="number" id="feat_17" name="feat_17" required>
+        
+        <label for="feat_18">Feature 18 (numeric):</label>
+        <input type="number" id="feat_18" name="feat_18" required>
+        
+        <label for="feat_19">Feature 19 (numeric):</label>
+        <input type="number" id="feat_19" name="feat_19" required>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if results %}
+    <div class="results">
+        <h3>Prediction Results:</h3>
+        <p>{{ results }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>

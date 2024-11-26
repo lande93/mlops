@@ -114,17 +114,17 @@ class DataTransformation:
             print("Target Feature Test Array Shape:", np.array(target_feature_test_df).shape)
 
 
-            target_feature_train_df = target_feature_train_df.values.reshape(-1, 1)
-            target_feature_test_df = target_feature_test_df.values.reshape(-1, 1)
+            # target_feature_train_df = target_feature_train_df.values.reshape(-1, 1)
+            # target_feature_test_df = target_feature_test_df.values.reshape(-1, 1)
 
             
 
             logging.info("Applied data transformations to the train and test datasets")
 
-            # train_array = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
-            # test_array = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
-            train_array = np.c_[input_feature_train_arr, target_feature_train_df]
-            test_array = np.c_[input_feature_test_arr, target_feature_test_df]
+            train_array = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            test_array = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            # train_array = np.c_[input_feature_train_arr, target_feature_train_df]
+            # test_array = np.c_[input_feature_test_arr, target_feature_test_df]
 
       
         
@@ -148,10 +148,3 @@ class DataTransformation:
             raise CustomException(e, sys)
 
 
-# # Usage example:
-# if __name__ == "__main__":
-#     data_transformation = DataTransformation()
-#     train_path = "artifacts/train.csv"
-#     test_path = "artifacts/test.csv"
-
-#     data_transformation.initiate_data_transformation(train_path, test_path)
