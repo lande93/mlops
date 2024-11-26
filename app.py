@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import pandas as pd
 from src.pipeline.predict_pipeline import CustomData,PredictPipeline
-import numpy as np
+
 
 
 application = Flask(__name__)
